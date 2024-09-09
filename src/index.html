@@ -8,18 +8,28 @@
     <title>Vanilla JavaScript App</title>
 </head>
 
-<body>
+</body>
     <main>
-    <h1>Vanilla JavaScript App</h1>
-    <p>Loading content from the API: <b id="name">...</b></p>
+        <h1>Vanilla JavaScript App</h1>
+        <p>Loading content from the API: <b id="name">...</b></p>
     </main>
-
+    
     <script>
     (async function() {
-        const { text } = await( await fetch(`/api/message`)).json();
-        document.querySelector('#name').textContent = text;
+        try {
+            const response = await fetch(`/api/message`);
+            console.log('Response status:', response.status);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.text(); // Parse response as text
+            console.log('Response body:', data);
+            document.querySelector('#name').textContent = data; // Use the text content directly
+        } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+            document.querySelector('#name').textContent = 'Error loading content';
+        }
     }());
     </script>
 </body>
-
 </html>
